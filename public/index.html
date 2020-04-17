@@ -36,12 +36,11 @@
         <div id = "textField" class="center"   style="display:none">
             <textarea id="textFieldtextArea" rows="40" cols="60"></textarea>
             <button id="myT"  class="myButton"   onmousedown="createTimeline()">create</button>
+            <div id = "outputField" class="center"></div>
          </div>
+         
         <div class="main">
-        <div  id="transcriptDisplay" >
-            <!--         <textarea id="transcriptDisplay" rows="1" cols="60">
-               This is where the transcript will be displayed
-            </textarea>-->           
+        <div  id="transcriptDisplay" >        
         </div>
         </div>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -53,8 +52,14 @@
  //onYouTubeIframeAPIReady();
 async function createTimeline(){
   console.log('Creating Timeline Now!');
+ // timeLineInfo= "";
   let timeLineInfo = document.getElementById('textFieldtextArea').value;
-  let timeLineInfoSplit = timeLineInfo.split(/[?!.  ,]+/).filter(Boolean);
+   timeLineInfo.split('"').join('');
+  
+  //let timeLineInfoSplit = timeLineInfo.split(/[?!.  ,]+/).filter(Boolean); // need to modify this
+  //right here is where we need to take out the quotes before we split the string
+  let timeLineInfoSplit = timeLineInfo.split(":");
+ 
   console.log(timeLineInfoSplit.length+'*'+timeLineInfoSplit);
   const response = await fetch('http://127.0.0.1:7000/getsubtitles');
   const data = await response.json();
@@ -65,13 +70,11 @@ async function createTimeline(){
   for (i=1;i<data.length;i++){
     let youtubeID = data[i].captions[data[i].captions.length-1];
     for (j=0;j<data[i].captions.length-1;j++){
-     
       let dataCaptionsArray = data[i].captions[j].text.split(/[ ,]+/).filter(Boolean);
       for (k=0;k<dataCaptionsArray.length;k++){
-        dataCaptions[position]=dataCaptionsArray[k];
+        dataCaptions[position]=dataCaptionsArray[k]; //dataCaptions dataCaptionsPlace dataCaptionsYoutubeID three variables share the same index
         dataCaptionsPlace[position] = data[i].captions[j].start;
         dataCaptionsYoutubeID[position] = youtubeID;
-    
         position++; 
       } 
     }
@@ -82,8 +85,6 @@ async function createTimeline(){
  //   console.log( dataCaptions[i]+'<DC DCP>'+dataCaptionsPlace[i]+ '   DCYID->'+dataCaptionsYoutubeID[i]);
  //   console.log('quote = '+timeLineInfoSplit[i+1]);
 //  };
-  
-
   //below is new code
 let bell = false;
 let uniqueWords = [];
@@ -93,7 +94,9 @@ let wordTally = [0];
  let jumpPointsUnique = [0];
  let jumpPoints = [0];
  let wordContext =[]
- let outputMassagedOuter = "";
+ let wordArray =[];
+ //console.log(dataCaptions);
+ let outputMassagedOuter = dataCaptions;
  let fullWordIndex = [];
 for (var index = 0; index < dataCaptions.length; index++) {
                             //holder = JSON.stringify(outputMassaged[index]);
@@ -105,7 +108,7 @@ for (var index = 0; index < dataCaptions.length; index++) {
                                    holder2 = holder2 + 1;
                                    jumpPoints[index] = jumpPointsUnique[index1];
                                    jumpPointsUnique[index1] = index; 
-                             console.log("added position to the word, "+ uniqueWords[index1] + ", the last instance of the word was at "+ index+" number of total words is  "+holder2+" jumpPoints= " +jumpPoints[index]+" jumpPointsUnique = "+jumpPointsUnique[index1]);
+                           //  console.log("added position to the word, "+ uniqueWords[index1] + ", the last instance of the word was at "+ index+" number of total words is  "+holder2+" jumpPoints= " +jumpPoints[index]+" jumpPointsUnique = "+jumpPointsUnique[index1]);
                              //    
                              wordTally[index1] = holder2;
                                   fullWordIndex[index] = index;      
@@ -115,7 +118,7 @@ for (var index = 0; index < dataCaptions.length; index++) {
                                 uniqueWords[currentLocation] =  holder ;
                                 wordTally[currentLocation] = 1;
                                 jumpPoints[index] = index;
-                              console.log("added "+holder+" to list of unique words "+currentLocation+ " The wordTally is = "+wordTally[currentLocation]);
+                          //    console.log("added "+holder+" to list of unique words "+currentLocation+ " The wordTally is = "+wordTally[currentLocation]);
                               //
                               fullWordIndex[index] = currentLocation; //replaced currentLocation with index below
                                 currentLocation = currentLocation + 1;
@@ -124,13 +127,74 @@ for (var index = 0; index < dataCaptions.length; index++) {
                             bell = false;             
                         }  
 
-  //above is new code
+                        //below is the search function that I imported from another application 
+                        //function findWords(){ 
+                               //looks like we have to assign the target array to multipleWords here to achieve continuity
+                               let word = "";
+                             let multipleWords= ["Trump", "China", "pandemic", "sick", "old", "loan"];
+                             //console.log("in here, and the key word is "+multipleWords);
+                           
+                            // console.log("multiple words = "+multipleWords);
+                           
+                             for (var mIndex = 0; mIndex<multipleWords.length; mIndex++){
+                               for (var index = 0; index<uniqueWords.length; index++){
+                                   word = JSON.stringify(multipleWords[mIndex])
+                                  // word = multipleWords[mIndex];
+                                   let word1=uniqueWords[index];
+                                       if (word1 === word){
+                                           let instance = uniqueWords[index];
+                                           let indexHolder = jumpPointsUnique[index];
+                                           for (var index1 = 0; index1<parseInt(wordTally[index]); index1++){
+                                          // console.log(instance+" word Tally="+wordTally[index]);
+                                           nextInstance = indexHolder;         
+                                         try {
+                                             let fd;
+                                             console.log(word);
+                                             let wordAppend = word;
+                                             let wordContextWithDate = [];
+                                             
+                                             for (var index3 =0; index3 < 10; index3++){
+                                              //let outputMassagedOuterAppend=""
+                                              outputMassagedOuterAppend=dataCaptions[nextInstance+index3-5]+" ";  
+                                              if (index3 == 5){
+                                                let hitColor = outputMassagedOuterAppend;
+                                                outputMassagedOuterAppend = hitColor.fontcolor("green");
+                                                
+                                              }                                  
+                                              wordArray.push(outputMassagedOuterAppend);          
+                                                     }   
+                                                    // outputMassagedOuterAppend = "";
+                                                    // wordArray.push(outputMassagedOuterAppend); 
+                                                    wordArray.push("<br>"); 
+                                                    }   
+                                                    catch (err) {
+                                                                         /* Handle the error */
+                                                                console.log(error);
+                                                                        }
+                                         indexHolder = parseInt(jumpPoints[nextInstance]);                         
+                                       }
+                                   }   
+                               }
+                              console.log('end');
+                              wordArray.join( );
 
+                            }
+  //above is new code
+//  for (var i = 0; i < dataCaptions.length; i++){
+//  console.log(dataCaptions[i]+'<DC DCPP>'+dataCaptionsPlace[i]+"<DCPP  FWI>"+dataCaptionsYoutubeID[i]);
+//  }
+let wordArrayArray = wordArray;
+  for (var i = 0; i < wordArrayArray.length; i++){
+   document.getElementById("outputField").innerHTML = document.getElementById("outputField").innerHTML + wordArrayArray[i];
+   if (wordArrayArray[i] === "\r") {
+    document.getElementById("outputField").innerHTML = document.getElementById("outputField").innerHTML +"<br>"
+   }
+  }
   console.log('end');
 };
 //console.log('what the fuck');
 function showTextfield() {
-    var x = document.getElementById("textField");
+    let x = document.getElementById("textField");
   if (x.style.display === "none") {
     x.style.display = "block";
   } else {
