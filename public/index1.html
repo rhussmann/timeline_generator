@@ -35,8 +35,8 @@
 
         </div>
         <div id = "keyField" class="center"   style="display:none">
-          <input type="text" id="Zserial" width="800px" cols="2" name="Yserial">
-          <button id="myV"  class="myButton" onclick="showKeyfield()">expand</button> 
+            <input type="text" id="Eserial" width="400px" cols="2" name="Eserial">
+          <button id="myV"  class="myButton" onclick="showKeyfield()">GO</button> 
        </div>
 
         <div id = "textField" class="center"   style="display:none">
@@ -57,6 +57,8 @@
         <script src="https://www.youtube.com/iframe_api"></script>
         <script>
  var player;
+ let SNumber = "";
+ let STimer = 0;
  //onYouTubeIframeAPIReady();
 async function createTimeline(){
   console.log('Creating Timeline Now!');
@@ -71,6 +73,8 @@ async function createTimeline(){
   console.log(timeLineInfoSplit.length+'*'+timeLineInfoSplit);
   const response = await fetch('http://127.0.0.1:7000/getsubtitles');
   const data = await response.json();
+  let startTime = [];
+  youtubeIDArray = [];
   let dataCaptions = [];
   let dataCaptionsPlace = []
   let dataCaptionsYoutubeID = []
@@ -150,6 +154,7 @@ for (var index = 0; index < dataCaptions.length; index++) {
                                   // word = multipleWords[mIndex];
                                    let word1=uniqueWords[index];
                                        if (word1 === word){
+                                         
                                            let instance = uniqueWords[index];
                                            let indexHolder = jumpPointsUnique[index];
                                            for (var index1 = 0; index1<parseInt(wordTally[index]); index1++){
@@ -161,20 +166,25 @@ for (var index = 0; index < dataCaptions.length; index++) {
                                              let wordAppend = word;
                                              let wordContextWithDate = [];
                                              
-                                             for (var index3 =0; index3 < 10; index3++){
+                                             for (var index3 = 0; index3 < 10; index3++){
                                               //let outputMassagedOuterAppend=""
                                               outputMassagedOuterAppend=dataCaptions[nextInstance+index3-5]+" ";  
                                               if (index3 == 5){
                                                let hitColor = outputMassagedOuterAppend;
                                                outputMassagedOuterAppend = hitColor.fontcolor("green");
-                                               // str.fontcolor("green");
-
+                                              SNumber = JSON.stringify(dataCaptionsYoutubeID[nextInstance+index3-5]);
+                                              STimer = dataCaptionsPlace[nextInstance+index3-5];
+                                              //outputMassagedOuterAppend = "<button onclick="+"player.loadVideoById("+SNumber+")"+">"+outputMassagedOuterAppend+"</button>";
+                                              outputMassagedOuterAppend = '<button onclick=player.loadVideoById('+SNumber+','+STimer+')>'+outputMassagedOuterAppend+'</button>';
                                               }                                  
                                               wordArray.push(outputMassagedOuterAppend);          
-                                                     }   
-                                                    // outputMassagedOuterAppend = "";
-                                                    // wordArray.push(outputMassagedOuterAppend); 
+                                                     }  
+                                                     //outputMassagedOuterAppend = "<button onclick="+"player.loadVideoById("+dataCaptionsYoutubeID[nextInstance+index3-5]+")"+">link</button>"; 
+                                                     wordArray.push(outputMassagedOuterAppend); 
                                                     wordArray.push("<br>"); 
+                                                    startTime.push(dataCaptionsPlace[nextInstance]);
+                                                    youtubeIDArray.push(dataCaptionsYoutubeID[nextInstance]);
+                                                   
                                                     }   
                                                     catch (err) {
                                                                          /* Handle the error */
@@ -194,14 +204,24 @@ for (var index = 0; index < dataCaptions.length; index++) {
 //  }
 let wordArrayArray = wordArray;
   for (var i = 0; i < wordArrayArray.length; i++){
-   document.getElementById("outputField").innerHTML = document.getElementById("outputField").innerHTML + wordArrayArray[i];
-   if (wordArrayArray[i] === "\r") {
-    document.getElementById("outputField").innerHTML = document.getElementById("outputField").innerHTML +"<br>"
+   document.getElementById("outputField").innerHTML = document.getElementById("outputField").innerHTML+wordArrayArray[i];
+  
+   if (wordArrayArray[i] === "\n") {
+   // wordArrayArray[i]+"button onclick=player.loadVideoById("+youtubeIDArray[i]+"?t="+startTime[i]+")";
+  //  document.getElementById("outputField").innerHTML = document.getElementById("outputField").innerHTML +"Click me"+"<br>"
+  console.log('in here');
    }
   }
+  console.log('startTime ='+startTime+ "   youtubeIDArray = "+youtubeIDArray);
+  //player.loadVideoById(serialNumber);
+
+  
   console.log('end');
 };
 //console.log('what the fuck');
+function myFunction(startTime) {
+  console.log('IN MYFUNCTION AND VIDEO VALUE = '+ startTime);
+}
 function showKeyfield() {
     let x = document.getElementById("keyField");
   if (x.style.display === "none") {
@@ -272,6 +292,7 @@ function initialize(){
                    }
                    player.loadVideoById(serialNumber);
                    }
+
            function sendVideoLink() {
                     let Yserial = document.getElementById('Yserial').value;
                    // console.log("in here!! "+TOPIC+ "  "+KEYS);

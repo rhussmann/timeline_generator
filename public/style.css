@@ -179,6 +179,26 @@ h2 + pre {
    
 
 }
+#transcriptDisplay {
+    width: 100%;
+    padding: 50px 0;
+    text-align: left;
+    background-color: rgb(255, 255, 255);
+    margin-top: 20px;
+    margin-left: 60px;
+   
+
+}
+
+#keyField {
+    width: 100%;
+    padding: 50px 0;
+    text-align: left;
+    background-color: rgb(243, 243, 243);
+    margin-top: 10px;
+   
+
+}
 
 #textField {
     width: 100%;
@@ -199,6 +219,10 @@ h2 + pre {
 } 
 
 #Yserial {
+    margin-left:5px;
+}
+
+#Zserial {
     margin-left:5px;
 }
 

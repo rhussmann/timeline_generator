@@ -35,8 +35,8 @@
 
         </div>
         <div id = "keyField" class="center"   style="display:none">
-          <input type="text" id="Zserial" width="800px" cols="2" name="Yserial">
-          <button id="myV"  class="myButton" onclick="showKeyfield()">expand</button> 
+            <input type="text" id="Eserial" width="400px" cols="2" name="Eserial">
+          <button id="myV"  class="myButton" onclick="showKeyfield()">GO</button> 
        </div>
 
         <div id = "textField" class="center"   style="display:none">
@@ -269,6 +269,7 @@ function initialize(){
                    for (i = 0; i<captionsArrayLength; i++){
                     document.getElementById("transcriptDisplay").innerHTML = document.getElementById("transcriptDisplay").innerHTML + 
                     (data[numberHolder].captions[i].text+"<br>");
+                    
                    }
                    player.loadVideoById(serialNumber);
                    }

@@ -4,6 +4,7 @@ var data = 'vIJdypOqlL4';
 function onYouTubeIframeAPIReady(data) {
     let dataInner = "";
     dataInner = data;
+    console.log('in here motherfucker');
   //  console.log('dataInner = '+dataInner);
     player = new YT.Player('video-placeholder', {
         width: 600,
