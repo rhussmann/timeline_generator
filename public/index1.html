@@ -61,8 +61,9 @@
  let STimer = 0;
  //onYouTubeIframeAPIReady();
 async function createTimeline(){
-  console.log('Creating Timeline Now!');
- // timeLineInfo= "";
+  
+ //let x = await (document.getElementById("textFieldTextArea").value); 
+ //console.log('x ='+x);
   let timeLineInfo = document.getElementById('textFieldtextArea').value;
    timeLineInfo.split('"').join('');
   
@@ -143,7 +144,8 @@ for (var index = 0; index < dataCaptions.length; index++) {
                         //function findWords(){ 
                                //looks like we have to assign the target array to multipleWords here to achieve continuity
                                let word = "";
-                             let multipleWords= ["Trump", "China", "pandemic", "sick", "old", "loan"];
+                             //let multipleWords = ["Trump", "China", "pandemic", "sick", "old", "loan"]
+                             let multipleWords = timeLineInfo.split(' ');
                              //console.log("in here, and the key word is "+multipleWords);
                            
                             // console.log("multiple words = "+multipleWords);
@@ -166,10 +168,10 @@ for (var index = 0; index < dataCaptions.length; index++) {
                                              let wordAppend = word;
                                              let wordContextWithDate = [];
                                              
-                                             for (var index3 = 0; index3 < 10; index3++){
+                                             for (var index3 = 0; index3 < 14; index3++){
                                               //let outputMassagedOuterAppend=""
-                                              outputMassagedOuterAppend=dataCaptions[nextInstance+index3-5]+" ";  
-                                              if (index3 == 5){
+                                              outputMassagedOuterAppend=dataCaptions[nextInstance+index3-8]+" ";  
+                                              if (index3 == 8){
                                                let hitColor = outputMassagedOuterAppend;
                                                outputMassagedOuterAppend = hitColor.fontcolor("green");
                                               SNumber = JSON.stringify(dataCaptionsYoutubeID[nextInstance+index3-5]);
