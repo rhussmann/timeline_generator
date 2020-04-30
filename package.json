@@ -2,7 +2,7 @@
   "name": "captions11",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index1.js",
   "dependencies": {
     "@drorgl/youtube-captions-scraper": "^1.0.2",
     "cheerio": "^1.0.0-rc.3",

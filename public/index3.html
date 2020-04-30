@@ -7,62 +7,40 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="style.css">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     </head>
    
     <style>
-           
+        div.transcriptDisplay {
+          background-color: lightblue;
+          width: 710px;
+          height: 410px;
+          overflow: scroll;
+        }       
     </style>
 
     <div id="video-placeholder"></div>  
 
     <body>
-      
         <div class="navbar"> 
-       
-       
-      
-        
-        
-     
-       
-        
-         
-      <!--  <button id="myQ"  class="myButton"  onmousedown="sendVideoLink()">get captions </button>-->
-        <input type="number" id="Rserial" value="0">
-        <button id="myR"  class="myButton"   onmousedown="getData()">fetch text</button>
-        <button id="myS"  class="myButton" onclick="showTextfield()">search captions</button>  
-        <button id="myU"  class="myButton" onclick="showKeyfield()">add video</button>  
-        <button id="myD"  class="myButton" onclick="showRecords()">show records</button> 
-        <br>
-        
-       
-
-        </div>
-        <div id = "showRecords" class="center"   style="display:none">
-          <button id="myB"  class="myButton" onclick="dropDatabase()">drop database</button>  
-        </div>
-
-
-        <div id = "keyField" class="center"   style="display:none">
-       
-            <input type="text" id="Eserial" width="400px" cols="2" name="Eserial">
-           
-          <button id="myV"  class="myButton" onclick="addTopic()">add topic</button> <br>
-        
-          <input type="text"   id="Yserial" width="400px" cols="2" name="hSerial"    class="tooltip">
-          
-          <select id="topics" class="select-css"  onchange="switchTopic()">
-            <option>select topic</option>    
-        </select>
+        <label for="Yname" >YOUTUBE TIMED TEXT RETRIEVAL</label><br>
+        <input type="text" id="Yserial" width="400px" cols="2" name="Yserial">
         <button id="myQ"  class="myButton"  onmousedown="sendVideoLink()">get captions </button>
+        
+        <button id="myS"  class="myButton" onclick="showTextfield()">timeline maker</button>  
+        <button id="myU"  class="myButton" onclick="showKeyfield()">word search</button>  
+        <br>
+        <input type="number" id="Rserial" value="0">
+        <button id="myR"  class="myButton"   onmousedown="getData()">fetch data</button>
 
-          
-          
+        </div>
+        <div id = "keyField" class="center"   style="display:none">
+            <input type="text" id="Eserial" width="400px" cols="2" name="Eserial">
+          <button id="myV"  class="myButton" onclick="showKeyfield()">GO</button> 
        </div>
 
         <div id = "textField" class="center"   style="display:none">
-            <textarea id="textFieldtextArea" rows="4" cols="90"></textarea>
+            <textarea id="textFieldtextArea" rows="40" cols="60"></textarea>
             <button id="myT"  class="myButton"   onmousedown="createTimeline()">create</button>
             <div id = "outputField" class="center"></div>
          </div>
@@ -190,14 +168,14 @@ for (var index = 0; index < dataCaptions.length; index++) {
                                              let wordAppend = word;
                                              let wordContextWithDate = [];
                                              
-                                             for (var index3 = 0; index3 < 15; index3++){
+                                             for (var index3 = 0; index3 < 14; index3++){
                                               //let outputMassagedOuterAppend=""
                                               outputMassagedOuterAppend=dataCaptions[nextInstance+index3-8]+" ";  
                                               if (index3 == 8){
                                                let hitColor = outputMassagedOuterAppend;
                                                outputMassagedOuterAppend = hitColor.fontcolor("green");
-                                              SNumber = JSON.stringify(dataCaptionsYoutubeID[nextInstance+index3-8]);
-                                              STimer = dataCaptionsPlace[nextInstance+index3-15];
+                                              SNumber = JSON.stringify(dataCaptionsYoutubeID[nextInstance+index3-5]);
+                                              STimer = dataCaptionsPlace[nextInstance+index3-5];
                                               //outputMassagedOuterAppend = "<button onclick="+"player.loadVideoById("+SNumber+")"+">"+outputMassagedOuterAppend+"</button>";
                                               outputMassagedOuterAppend = '<button onclick=player.loadVideoById('+SNumber+','+STimer+')>'+outputMassagedOuterAppend+'</button>';
                                               }                                  
@@ -236,99 +214,23 @@ let wordArrayArray = wordArray;
   console.log('in here');
    }
   }
-  //console.log('startTime ='+startTime+ "   youtubeIDArray = "+youtubeIDArray);
+  console.log('startTime ='+startTime+ "   youtubeIDArray = "+youtubeIDArray);
   //player.loadVideoById(serialNumber);
 
   
   console.log('end');
 };
 //console.log('what the fuck');
-
-async function showRecords(){
-  document.getElementById("showRecords").innerHTML = "";
-  document.getElementById("showRecords").innerHTML = "RECORDS"+"<br>";
-
-  let x = document.getElementById("showRecords");
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
-    console.log('We are in the showTextfield function');
-  }
-
-
-
-
-
-                    const response = await fetch('http://127.0.0.1:7000/getsubtitles');
-                   const data = await response.json();
-                  //  console.log('data = '+data[1]._id);
-                   // let numberHolder = document.getElementById('Rserial').value
-                   //<i class="fas fa-thumbs-up "></i>
-                   let pre =  "<i class=";
-                   let post = "></i>"
-                   let icon = "fas fa-thumbs-up"
-                   for (i = 0; i<data.length; i++){
-                   captionsArrayLength = data[i].captions.length;
-                   //console.log('captionsArrayLength = ' + captionsArrayLength);
-                   
-                    serialNumber = data[i].captions[captionsArrayLength-1];
-                    id = data[i]._id;
-                    console.log('id ='+id);
-              //     console.log('serial number ='+ serialNumber);
-                   //e = document.getElementById("showRecords").innerHTML
-                    document.getElementById("showRecords").innerHTML = document.getElementById("showRecords").innerHTML +  
-                    '<button class="myRedButton"  onclick=dropRecord('+JSON.stringify(id)+')>DELETE</button>'+
-                    '<i class="material-icons" style="font-size:14px;color:green">video_library</i>'+
-                     '<button class="myButton"  onclick=player.loadVideoById('+JSON.stringify(serialNumber)+')>PLAY</button><br><i class="fa fa-trash-o" ></i>'
-                     ;
-                   }
-                  document.getElementById("showRecords").innerHTML = document.getElementById("showRecords").innerHTML+
-                  "<button id=" +"myB"+"class="+"myButton"+"onclick="+"dropDatabase()"+">DROP DATABASE</button>" 
-                   }
-                  
-                  // <i class="fab fa-youtube-square"></i>
-
-//};
-async function myFunction(startTime) {
+function myFunction(startTime) {
   console.log('IN MYFUNCTION AND VIDEO VALUE = '+ startTime);
 }
-async function showKeyfield() {
+function showKeyfield() {
     let x = document.getElementById("keyField");
   if (x.style.display === "none") {
     x.style.display = "block";
-    console.log('We are in the showKeyfield function');
-   const response = await fetch('http://127.0.0.1:7000/populatetopic');
-   let data =[];
-  const data1 = await response.json();
-   data = data1;
-  console.log('DATA = '+JSON.stringify(data.currentRecord));
-  console.log('The topic data ='+ JSON.stringify(data));
-  document.getElementById('topics').innnerHTML = JSON.stringify(data);
-  var strMessage9 = await document.getElementById("topics");
-   // var URL11 = await document.getElementById('api');
-   // URL11.innerHTML.value = "";
-   strMessage9.innerHTML = "";
-    if (data=="") {
-        data[data.length-1]= "TOPICS";
-    }
-    strMessage9.innerHTML = strMessage9.innerHTML+"<option>"+(data[data.length-1].currentRecord);
-    
-    for (var index=0; index<data.length-1; index++){
-        strMessage9.innerHTML = strMessage9.innerHTML+"<option>"+(data[index].currentRecord);
-    } 
-
-
-
-
-
-
-
-
-
   } else {
     x.style.display = "none";
- 
+    console.log('We are in the showKeyfield function');
   }
 }
 
@@ -421,53 +323,7 @@ function initialize(){
             document.getElementById("controlBar").style.display = "none";
             document.getElementById("showBar").style.display = "block";
           }
-           
-          function dropDatabase(){
-          
-                    const options = {
-                        method: 'POST',
-                        options: false,
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                       // body: JSON.stringify(data),
-                    };
-                    fetch('http://127.0.0.1:7000/dropdatabase', options);
-                    console.log(options);
 
-          }
-
-          function dropRecord(data){
-          console.log('in the drop records function')
-          const recordToDelete = {data};
-          const options = {
-              method: 'POST',
-              options: false,
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(recordToDelete)
-          };
-          fetch('http://127.0.0.1:7000/droprecord', options);
-          console.log(options);
-
-}
-          function addTopic(){
-            let Eserial = document.getElementById('Eserial').value;
-              console.log('NEW TOPIC = '+JSON.stringify(Eserial) );
-              const data = ({Eserial});
-                    const options = {
-                        method: 'POST',
-                        options: false,
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data),
-                    };
-                    fetch('http://127.0.0.1:7000/addtopic', options);
-                    console.log(options);
-
-          }
           
 
         </script>

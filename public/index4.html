@@ -11,7 +11,12 @@
     </head>
    
     <style>
-           
+        div.transcriptDisplay {
+          background-color: lightblue;
+          width: 710px;
+          height: 410px;
+          overflow: scroll;
+        }       
     </style>
 
     <div id="video-placeholder"></div>  
@@ -19,23 +24,23 @@
     <body>
       
         <div class="navbar"> 
+        <label for="Yname" >YOUTUBE TIMED TEXT RETRIEVAL</label><br>
        
-       
-      
+        <input type="text"   id="Yserial" width="400px" cols="2" name="Yserial"    class="tooltip">
         
         
      
        
         
          
-      <!--  <button id="myQ"  class="myButton"  onmousedown="sendVideoLink()">get captions </button>-->
-        <input type="number" id="Rserial" value="0">
-        <button id="myR"  class="myButton"   onmousedown="getData()">fetch text</button>
-        <button id="myS"  class="myButton" onclick="showTextfield()">search captions</button>  
-        <button id="myU"  class="myButton" onclick="showKeyfield()">add video</button>  
+        <button id="myQ"  class="myButton"  onmousedown="sendVideoLink()">get captions </button>
+       
+        <button id="myS"  class="myButton" onclick="showTextfield()">timeline maker</button>  
+        <button id="myU"  class="myButton" onclick="showKeyfield()">advanced</button>  
         <button id="myD"  class="myButton" onclick="showRecords()">show records</button> 
         <br>
-        
+        <input type="number" id="Rserial" value="0">
+        <button id="myR"  class="myButton"   onmousedown="getData()">fetch data</button>
        
 
         </div>
@@ -45,14 +50,10 @@
 
 
         <div id = "keyField" class="center"   style="display:none">
-       
             <input type="text" id="Eserial" width="400px" cols="2" name="Eserial">
-           
-          <button id="myV"  class="myButton" onclick="addTopic()">add topic</button> <br>
-        
-          <input type="text"   id="Yserial" width="400px" cols="2" name="hSerial"    class="tooltip">
-          
-          <select id="topics" class="select-css"  onchange="switchTopic()">
+          <button id="myV"  class="myButton" onclick="showKeyfield()">ADD TOPIC</button> <br>
+          <input type="text"   id="Yserial" width="400px" cols="2" name="Yserial"    class="tooltip">
+          <select id="topics" class="select-css" onchange="switchTopic()">
             <option>select topic</option>    
         </select>
         <button id="myQ"  class="myButton"  onmousedown="sendVideoLink()">get captions </button>
@@ -62,7 +63,7 @@
        </div>
 
         <div id = "textField" class="center"   style="display:none">
-            <textarea id="textFieldtextArea" rows="4" cols="90"></textarea>
+            <textarea id="textFieldtextArea" rows="10" cols="90"></textarea>
             <button id="myT"  class="myButton"   onmousedown="createTimeline()">create</button>
             <div id = "outputField" class="center"></div>
          </div>
@@ -290,45 +291,16 @@ async function showRecords(){
                   // <i class="fab fa-youtube-square"></i>
 
 //};
-async function myFunction(startTime) {
+function myFunction(startTime) {
   console.log('IN MYFUNCTION AND VIDEO VALUE = '+ startTime);
 }
-async function showKeyfield() {
+function showKeyfield() {
     let x = document.getElementById("keyField");
   if (x.style.display === "none") {
     x.style.display = "block";
-    console.log('We are in the showKeyfield function');
-   const response = await fetch('http://127.0.0.1:7000/populatetopic');
-   let data =[];
-  const data1 = await response.json();
-   data = data1;
-  console.log('DATA = '+JSON.stringify(data.currentRecord));
-  console.log('The topic data ='+ JSON.stringify(data));
-  document.getElementById('topics').innnerHTML = JSON.stringify(data);
-  var strMessage9 = await document.getElementById("topics");
-   // var URL11 = await document.getElementById('api');
-   // URL11.innerHTML.value = "";
-   strMessage9.innerHTML = "";
-    if (data=="") {
-        data[data.length-1]= "TOPICS";
-    }
-    strMessage9.innerHTML = strMessage9.innerHTML+"<option>"+(data[data.length-1].currentRecord);
-    
-    for (var index=0; index<data.length-1; index++){
-        strMessage9.innerHTML = strMessage9.innerHTML+"<option>"+(data[index].currentRecord);
-    } 
-
-
-
-
-
-
-
-
-
   } else {
     x.style.display = "none";
- 
+    console.log('We are in the showKeyfield function');
   }
 }
 
@@ -452,22 +424,6 @@ function initialize(){
           console.log(options);
 
 }
-          function addTopic(){
-            let Eserial = document.getElementById('Eserial').value;
-              console.log('NEW TOPIC = '+JSON.stringify(Eserial) );
-              const data = ({Eserial});
-                    const options = {
-                        method: 'POST',
-                        options: false,
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data),
-                    };
-                    fetch('http://127.0.0.1:7000/addtopic', options);
-                    console.log(options);
-
-          }
           
 
         </script>
