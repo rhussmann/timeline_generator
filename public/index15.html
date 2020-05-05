@@ -46,7 +46,7 @@
         
           <input type="text"   id="Yserial" width="400px" cols="2" name="hSerial"    class="tooltip">
           
-          <select id="topics" class="select-css" onchange="switchVideo" >
+          <select id="topics" class="select-css"  >
             <option>select topic</option>    
         </select>
         <button id="myQ"  class="myButton"  onmousedown="sendVideoLink()">get captions </button>
@@ -66,9 +66,6 @@
 
        </div>  
        
-       <div id = "topicStash">
-
-      </div> 
        
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
@@ -81,18 +78,6 @@
  //onYouTubeIframeAPIReady();
 
 setUp();
-
-function switchVideoTopic(){
- console.log('in here');
-  let currentTopic = document.getElementById("topics").value
-  document.getElementById("topicStash").innerHTML = currentTopic+"<br>";
- // console.log('currentTopic ='+ currentTopic);
-  //let x = document.getElementById("showRecords");
-  //x.style.display = "none";
-  //showRecords();
-
-
-}
 
 function switchMainTopic(){
 
@@ -353,7 +338,6 @@ async function showKeyfield() {
    let data =[];
   const data1 = await response.json();
    data = data1;
-   
   console.log('DATA = '+JSON.stringify(data.currentRecord));
   console.log('The topic data ='+ JSON.stringify(data));
   document.getElementById('topics').innnerHTML = JSON.stringify(data);
@@ -369,7 +353,6 @@ async function showKeyfield() {
     for (var index=0; index<data.length-1; index++){
         strMessage9.innerHTML = strMessage9.innerHTML+"<option>"+(data[index].currentRecord);
     } 
-    
 
   } else {
     x.style.display = "none";

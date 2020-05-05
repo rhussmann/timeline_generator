@@ -46,9 +46,9 @@
         
           <input type="text"   id="Yserial" width="400px" cols="2" name="hSerial"    class="tooltip">
           
-          <select id="topics" class="select-css" onchange="switchVideo" >
+          <select id="topics11" class="select-css"  >
             <option>select topic</option>    
-        </select>
+          </select>
         <button id="myQ"  class="myButton"  onmousedown="sendVideoLink()">get captions </button>
 
       </div>
@@ -86,7 +86,7 @@ function switchVideoTopic(){
  console.log('in here');
   let currentTopic = document.getElementById("topics").value
   document.getElementById("topicStash").innerHTML = currentTopic+"<br>";
- // console.log('currentTopic ='+ currentTopic);
+ console.log('currentTopic ='+ currentTopic);
   //let x = document.getElementById("showRecords");
   //x.style.display = "none";
   //showRecords();
@@ -125,11 +125,8 @@ async function setUp() {
     for (var index=0; index<data.length-1; index++){
         strMessage9.innerHTML = strMessage9.innerHTML+"<option>"+(data[index].currentRecord);
     } 
-
- //document.getElementById('currentTopic').innerHTML = "";
-
 }
-
+ //onYouTubeIframeAPIReady();
 async function createTimeline(){
   
  //let x = await (document.getElementById("textFieldTextArea").value); 
@@ -337,14 +334,13 @@ async function showRecords(){
                   document.getElementById("showRecords").innerHTML = document.getElementById("showRecords").innerHTML+
                   "<button id=" +"myB"+"class="+"myButton"+"onclick="+"dropDatabase()"+">DROP DATABASE</button>" 
                    }
-                  
-                  // <i class="fab fa-youtube-square"></i>
-
 //};
 async function myFunction(startTime) {
   console.log('IN MYFUNCTION AND VIDEO VALUE = '+ startTime);
 }
 async function showKeyfield() {
+
+
     let x = document.getElementById("keyField");
   if (x.style.display === "none") {
     x.style.display = "block";
@@ -352,25 +348,24 @@ async function showKeyfield() {
    const response = await fetch('http://127.0.0.1:7000/populatetopic');
    let data =[];
   const data1 = await response.json();
-   data = data1;
-   
-  console.log('DATA = '+JSON.stringify(data.currentRecord));
+   data = await data1;
+   console.log('DATA = '+JSON.stringify(data.currentRecord));
   console.log('The topic data ='+ JSON.stringify(data));
-  document.getElementById('topics').innnerHTML = JSON.stringify(data);
-  var strMessage9 = await document.getElementById("topics");
+  document.getElementById('topics11').innnerHTML = JSON.stringify(data).currentRecord;
+  var strMessage9 = await document.getElementById("topics11");
    // var URL11 = await document.getElementById('api');
    // URL11.innerHTML.value = "";
-   strMessage9.innerHTML = "";
+   console.log('RIGHT HERE!!!!!!!!'+data.length);
+   strMessage9.innerHTML =  "";
     if (data=="") {
-        data[data.length-1]= "TOPICS";
+        data[data.length-1]= "TOPICS11";
     }
     strMessage9.innerHTML = strMessage9.innerHTML+"<option>"+(data[data.length-1].currentRecord);
-    
+  
     for (var index=0; index<data.length-1; index++){
         strMessage9.innerHTML = strMessage9.innerHTML+"<option>"+(data[index].currentRecord);
+           
     } 
-    
-
   } else {
     x.style.display = "none";
  
@@ -440,22 +435,17 @@ function initialize(){
 
            function sendVideoLink() {
                     let Yserial = document.getElementById('Yserial').value;
-                    console.log("in here!! "+Yserial);
+                   // console.log("in here!! "+TOPIC+ "  "+KEYS);
                     const data = {Yserial};
-                    let topicsSelect = JSON.stringify(document.getElementById('topics').selectedIndex);
-                    
-                   // options[sel.selectedIndex];
-                    const topics = {topicsSelect};
-                    console.log('topicsSelect = '+topicsSelect);
                     const options = {
                         method: 'POST',
                         options: false,
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(data,topicsSelect),
+                        body: JSON.stringify(data),
                     };
-               //     fetch('http://127.0.0.1:7000/getsubtitles', options);
+                    fetch('http://127.0.0.1:7000/getsubtitles', options);
                     console.log(options);
                    // getData();
                   // data = 'XlrYiJt9IlQ'

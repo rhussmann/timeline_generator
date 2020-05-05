@@ -34,21 +34,28 @@ app.get('/getsubtitles', (request,response) => {
 
 
 app.post ('/getsubtitles', (request1,response) =>  {
+
 let Yserial = "";
- Yserial = request1.body.Yserial;
+let topic = "";
+Yserial = request1.body.Yserial;
+topic = request1.body.topicsSelect;
  let Zserial = Yserial.split("="); //this splits the id from the right hand side of the youtube address
-console.log('Zserial[1] = '+Zserial[1])
+console.log('Zserial[1] = '+Zserial[1]+' topic = '+topic);
 var getSubtitles = require('youtube-captions-scraper').getSubtitles;
 //const Zserial = Zserial[1];
 getSubtitles({
   videoID: Zserial[1], // youtube video id
   lang: 'en' // default: `en`
-}).then(function(captions) {
+}).then(function(captions, topic) {
   captions.push(String(Zserial[1]));
+  // database.insert({captions},{topic});
    database.insert({captions});
+  // database.insert({topic});
    console.log('in here');
 });
 })
+
+
 //below is the function to remove the database totally.  
 app.post('/dropdatabase', (request1, response) => {
 console.log('DROPPING DATABASE')
@@ -86,9 +93,10 @@ app.post('/addtopic', (request1,response) =>{
   })
 
   app.get('/populatetopic', (request,response) => {
-  console.log('inside the populate topic function');
+  console.log('inside the populate topic function in here to post the video');
     let currentRecord = "";
-    //currentRecord = request.body.data;
+    currentRecord = request.body.data;
+  
     //console.log('currentRecord ='+ currentRecord);
    // database.remove({ _id: currentRecord }, {}, function (err, numRemoved){
     //console.log('POPULATING THE TOPIC DROP DOWN');
@@ -99,7 +107,7 @@ app.post('/addtopic', (request1,response) =>{
           return;
         }else{
       response.send(data);
-        console.log('DATA = '+ data)
+      //  console.log('DATA = '+ data)
         }//response = data;
        //database.count({}, function (err, count) {
         //response.end();
