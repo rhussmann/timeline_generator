@@ -351,8 +351,8 @@ async function showKeyfield() {
    data = await data1;
    console.log('DATA = '+JSON.stringify(data.currentRecord));
   console.log('The topic data ='+ JSON.stringify(data));
-  document.getElementById('topics11').innnerHTML = JSON.stringify(data).currentRecord;
-  var strMessage9 = await document.getElementById("topics11");
+  document.getElementById('topics').innnerHTML = JSON.stringify(data).currentRecord;
+  var strMessage9 = await document.getElementById("topics");
    // var URL11 = await document.getElementById('api');
    // URL11.innerHTML.value = "";
    console.log('RIGHT HERE!!!!!!!!'+data.length);
