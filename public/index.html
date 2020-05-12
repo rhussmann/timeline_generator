@@ -7,49 +7,68 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="style.css">
-
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </head>
    
     <style>
-        div.transcriptDisplay {
-          background-color: lightblue;
-          width: 710px;
-          height: 410px;
-          overflow: scroll;
-        }       
+           
     </style>
 
     <div id="video-placeholder"></div>  
 
     <body>
+      
         <div class="navbar"> 
-        <label for="Yname" >YOUTUBE TIMED TEXT RETRIEVAL</label><br>
-        <input type="text" id="Yserial" width="400px" cols="2" name="Yserial">
-        <button id="myQ"  class="myButton"  onmousedown="sendVideoLink()">get captions </button>
-        
-        <button id="myS"  class="myButton" onclick="showTextfield()">timeline maker</button>  
-        <button id="myU"  class="myButton" onclick="showKeyfield()">word search</button>  
-        <br>
+  
+      <!--  <button id="myQ"  class="myButton"  onmousedown="sendVideoLink()">get captions </button>-->
         <input type="number" id="Rserial" value="0">
-        <button id="myR"  class="myButton"   onmousedown="getData()">fetch data</button>
+        <button id="myR"  class="myButton"   onmousedown="getData()">fetch text</button>
+        <button id="myS"  class="myButton" onclick="showTextfield()">search captions</button>  
+        <button id="myU"  class="myButton" onclick="showKeyfield()">add video</button>  
+        <button id="myD"  class="myButton" onclick="showRecords()">show records</button> 
+        <select id="topics11" class="select-css"  onchange="switchMainTopic()">
+        <option>select topic</option>    
+        </select>
+      </div>
+        
 
+
+        <div id = "showRecords" class="center"   style="display:none">
+          <button id="myB"  class="myButton" onclick="dropDatabase()">drop database</button>  
         </div>
+
+
         <div id = "keyField" class="center"   style="display:none">
-          <input type="text" id="Zserial" width="800px" cols="2" name="Yserial">
-          <button id="myV"  class="myButton" onclick="showKeyfield()">expand</button> 
-       </div>
+       
+            <input type="text" id="Eserial" width="400px" cols="2" name="Eserial">
+           
+          <button id="myV"  class="myButton" onclick="addTopic()">add topic</button> <br>
+        
+          <input type="text"   id="Yserial" width="400px" cols="2" name="hSerial"    class="tooltip">
+          
+          <select id="topics" class="select-css"  >
+            <option>select topic</option>    
+          </select>
+        <button id="myQ"  class="myButton"  onmousedown="sendVideoLink()">get captions </button>
+
+      </div>
+          
+     
 
         <div id = "textField" class="center"   style="display:none">
-            <textarea id="textFieldtextArea" rows="40" cols="60"></textarea>
+            <textarea id="textFieldtextArea" rows="4" cols="90"></textarea>
             <button id="myT"  class="myButton"   onmousedown="createTimeline()">create</button>
             <div id = "outputField" class="center"></div>
          </div>
 
-       
+        </div>
        <div id = "transcriptDisplay">
 
        </div>  
        
+       <div id = "topicStash">
+
+      </div> 
        
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
@@ -57,10 +76,61 @@
         <script src="https://www.youtube.com/iframe_api"></script>
         <script>
  var player;
+ let SNumber = "";
+ let STimer = 0;
+ //onYouTubeIframeAPIReady();
+
+setUp();
+
+function switchVideoTopic(){
+ console.log('in here');
+  let currentTopic = document.getElementById("topics").value
+  document.getElementById("topicStash").innerHTML = currentTopic+"<br>";
+ console.log('currentTopic ='+ currentTopic);
+  //let x = document.getElementById("showRecords");
+  //x.style.display = "none";
+  //showRecords();
+
+
+}
+
+function switchMainTopic(){
+
+  let currentTopic = document.getElementById("topics11").value
+  document.getElementById("showRecords").innerHTML = currentTopic+"<br>";
+  let x = document.getElementById("showRecords");
+  x.style.display = "none";
+  showRecords();
+
+}
+
+async function setUp() {
+
+  const response = await fetch('https://127.0.0.1:7000/populatetopic');
+   let data =[];
+  const data1 = await response.json();
+   data = data1;
+  console.log('DATA = '+JSON.stringify(data.currentRecord));
+  console.log('The topic data ='+ JSON.stringify(data));
+  document.getElementById('topics11').innnerHTML = JSON.stringify(data);
+  var strMessage9 = await document.getElementById("topics11");
+   // var URL11 = await document.getElementById('api');
+   // URL11.innerHTML.value = "";
+   strMessage9.innerHTML = "";
+    if (data=="") {
+        data[data.length-1]= "TOPICS";
+    }
+    strMessage9.innerHTML = strMessage9.innerHTML+"<option>"+(data[data.length-1].currentRecord);
+    
+    for (var index=0; index<data.length-1; index++){
+        strMessage9.innerHTML = strMessage9.innerHTML+"<option>"+(data[index].currentRecord);
+    } 
+}
  //onYouTubeIframeAPIReady();
 async function createTimeline(){
-  console.log('Creating Timeline Now!');
- // timeLineInfo= "";
+  
+ //let x = await (document.getElementById("textFieldTextArea").value); 
+ //console.log('x ='+x);
   let timeLineInfo = document.getElementById('textFieldtextArea').value;
    timeLineInfo.split('"').join('');
   
@@ -69,8 +139,10 @@ async function createTimeline(){
   let timeLineInfoSplit = timeLineInfo.split(":");
  
   console.log(timeLineInfoSplit.length+'*'+timeLineInfoSplit);
-  const response = await fetch('http://127.0.0.1:7000/getsubtitles');
+  const response = await fetch('https://127.0.0.1:7000/getsubtitles');
   const data = await response.json();
+  let startTime = [];
+  youtubeIDArray = [];
   let dataCaptions = [];
   let dataCaptionsPlace = []
   let dataCaptionsYoutubeID = []
@@ -139,7 +211,8 @@ for (var index = 0; index < dataCaptions.length; index++) {
                         //function findWords(){ 
                                //looks like we have to assign the target array to multipleWords here to achieve continuity
                                let word = "";
-                             let multipleWords= ["Trump", "China", "pandemic", "sick", "old", "loan"];
+                             //let multipleWords = ["Trump", "China", "pandemic", "sick", "old", "loan"]
+                             let multipleWords = timeLineInfo.split(' ');
                              //console.log("in here, and the key word is "+multipleWords);
                            
                             // console.log("multiple words = "+multipleWords);
@@ -150,6 +223,7 @@ for (var index = 0; index < dataCaptions.length; index++) {
                                   // word = multipleWords[mIndex];
                                    let word1=uniqueWords[index];
                                        if (word1 === word){
+                                         
                                            let instance = uniqueWords[index];
                                            let indexHolder = jumpPointsUnique[index];
                                            for (var index1 = 0; index1<parseInt(wordTally[index]); index1++){
@@ -161,20 +235,25 @@ for (var index = 0; index < dataCaptions.length; index++) {
                                              let wordAppend = word;
                                              let wordContextWithDate = [];
                                              
-                                             for (var index3 =0; index3 < 10; index3++){
+                                             for (var index3 = 0; index3 < 15; index3++){
                                               //let outputMassagedOuterAppend=""
-                                              outputMassagedOuterAppend=dataCaptions[nextInstance+index3-5]+" ";  
-                                              if (index3 == 5){
+                                              outputMassagedOuterAppend=dataCaptions[nextInstance+index3-8]+" ";  
+                                              if (index3 == 8){
                                                let hitColor = outputMassagedOuterAppend;
                                                outputMassagedOuterAppend = hitColor.fontcolor("green");
-                                               // str.fontcolor("green");
-
+                                              SNumber = JSON.stringify(dataCaptionsYoutubeID[nextInstance+index3-8]);
+                                              STimer = dataCaptionsPlace[nextInstance+index3-15];
+                                              //outputMassagedOuterAppend = "<button onclick="+"player.loadVideoById("+SNumber+")"+">"+outputMassagedOuterAppend+"</button>";
+                                              outputMassagedOuterAppend = '<button onclick=player.loadVideoById('+SNumber+','+STimer+')>'+outputMassagedOuterAppend+'</button>';
                                               }                                  
                                               wordArray.push(outputMassagedOuterAppend);          
-                                                     }   
-                                                    // outputMassagedOuterAppend = "";
-                                                    // wordArray.push(outputMassagedOuterAppend); 
+                                                     }  
+                                                     //outputMassagedOuterAppend = "<button onclick="+"player.loadVideoById("+dataCaptionsYoutubeID[nextInstance+index3-5]+")"+">link</button>"; 
+                                                     wordArray.push(outputMassagedOuterAppend); 
                                                     wordArray.push("<br>"); 
+                                                    startTime.push(dataCaptionsPlace[nextInstance]);
+                                                    youtubeIDArray.push(dataCaptionsYoutubeID[nextInstance]);
+                                                   
                                                     }   
                                                     catch (err) {
                                                                          /* Handle the error */
@@ -194,21 +273,102 @@ for (var index = 0; index < dataCaptions.length; index++) {
 //  }
 let wordArrayArray = wordArray;
   for (var i = 0; i < wordArrayArray.length; i++){
-   document.getElementById("outputField").innerHTML = document.getElementById("outputField").innerHTML + wordArrayArray[i];
-   if (wordArrayArray[i] === "\r") {
-    document.getElementById("outputField").innerHTML = document.getElementById("outputField").innerHTML +"<br>"
+   document.getElementById("outputField").innerHTML = document.getElementById("outputField").innerHTML+wordArrayArray[i];
+  
+   if (wordArrayArray[i] === "\n") {
+   // wordArrayArray[i]+"button onclick=player.loadVideoById("+youtubeIDArray[i]+"?t="+startTime[i]+")";
+  //  document.getElementById("outputField").innerHTML = document.getElementById("outputField").innerHTML +"Click me"+"<br>"
+  console.log('in here');
    }
   }
+  //console.log('startTime ='+startTime+ "   youtubeIDArray = "+youtubeIDArray);
+  //player.loadVideoById(serialNumber);
+
+  
   console.log('end');
 };
 //console.log('what the fuck');
-function showKeyfield() {
-    let x = document.getElementById("keyField");
+
+async function showRecords(){
+  document.getElementById("showRecords").innerHTML = "";
+  let currentTopic = document.getElementById("topics11").value
+  document.getElementById("showRecords").innerHTML = currentTopic+"<br>";
+
+  //+"<br>"+ "RECORDS"+"<br>";
+
+  let x = document.getElementById("showRecords");
   if (x.style.display === "none") {
     x.style.display = "block";
   } else {
     x.style.display = "none";
+    console.log('We are in the showTextfield function');
+  }
+
+
+
+
+
+                    const response = await fetch('https://127.0.0.1:7000/getsubtitles');
+                   const data = await response.json();
+                  //  console.log('data = '+data[1]._id);
+                   // let numberHolder = document.getElementById('Rserial').value
+                   //<i class="fas fa-thumbs-up "></i>
+                   let pre =  "<i class=";
+                   let post = "></i>"
+                   let icon = "fas fa-thumbs-up"
+                   for (i = 0; i<data.length; i++){
+                   captionsArrayLength = data[i].captions.length;
+                   //console.log('captionsArrayLength = ' + captionsArrayLength);
+                   
+                    serialNumber = data[i].captions[captionsArrayLength-1];
+                    id = data[i]._id;
+                    console.log('id ='+id);
+              //     console.log('serial number ='+ serialNumber);
+                   //e = document.getElementById("showRecords").innerHTML
+                    document.getElementById("showRecords").innerHTML = document.getElementById("showRecords").innerHTML +  
+                    '<button class="myRedButton"  onclick=dropRecord('+JSON.stringify(id)+')>DELETE</button>'+
+                    '<i class="material-icons" style="font-size:14px;color:green">video_library</i>'+
+                     '<button class="myButton"  onclick=player.loadVideoById('+JSON.stringify(serialNumber)+')>PLAY</button><br><i class="fa fa-trash-o" ></i>'
+                     ;
+                   }
+                  document.getElementById("showRecords").innerHTML = document.getElementById("showRecords").innerHTML+
+                  "<button id=" +"myB"+"class="+"myButton"+"onclick="+"dropDatabase()"+">DROP DATABASE</button>" 
+                   }
+//};
+async function myFunction(startTime) {
+  console.log('IN MYFUNCTION AND VIDEO VALUE = '+ startTime);
+}
+async function showKeyfield() {
+
+
+    let x = document.getElementById("keyField");
+  if (x.style.display === "none") {
+    x.style.display = "block";
     console.log('We are in the showKeyfield function');
+   const response = await fetch('https://127.0.0.1:7000/populatetopic');
+   let data =[];
+  const data1 = await response.json();
+   data = await data1;
+   console.log('DATA = '+JSON.stringify(data.currentRecord));
+  console.log('The topic data ='+ JSON.stringify(data));
+  document.getElementById('topics').innnerHTML = JSON.stringify(data).currentRecord;
+  var strMessage9 = await document.getElementById("topics");
+   // var URL11 = await document.getElementById('api');
+   // URL11.innerHTML.value = "";
+   console.log('RIGHT HERE!!!!!!!!'+data.length);
+   strMessage9.innerHTML =  "";
+    if (data=="") {
+        data[data.length-1]= "TOPICS11";
+    }
+    strMessage9.innerHTML = strMessage9.innerHTML+"<option>"+(data[data.length-1].currentRecord);
+  
+    for (var index=0; index<data.length-1; index++){
+        strMessage9.innerHTML = strMessage9.innerHTML+"<option>"+(data[index].currentRecord);
+           
+    } 
+  } else {
+    x.style.display = "none";
+ 
   }
 }
 
@@ -257,7 +417,7 @@ function initialize(){
                 async function getData() {
                   
                     document.getElementById("transcriptDisplay").innerHTML = "HOLD ON!";
-                    const response = await fetch('http://127.0.0.1:7000/getsubtitles');
+                    const response = await fetch('https://127.0.0.1:7000/getsubtitles');
                    const data = await response.json();
                     console.log(data);
                     let numberHolder = document.getElementById('Rserial').value
@@ -272,6 +432,7 @@ function initialize(){
                    }
                    player.loadVideoById(serialNumber);
                    }
+
            function sendVideoLink() {
                     let Yserial = document.getElementById('Yserial').value;
                    // console.log("in here!! "+TOPIC+ "  "+KEYS);
@@ -284,7 +445,7 @@ function initialize(){
                         },
                         body: JSON.stringify(data),
                     };
-                    fetch('http://127.0.0.1:7000/getsubtitles', options);
+                    fetch('https://127.0.0.1:7000/getsubtitles', options);
                     console.log(options);
                    // getData();
                   // data = 'XlrYiJt9IlQ'
@@ -300,7 +461,53 @@ function initialize(){
             document.getElementById("controlBar").style.display = "none";
             document.getElementById("showBar").style.display = "block";
           }
+           
+          function dropDatabase(){
+          
+                    const options = {
+                        method: 'POST',
+                        options: false,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                       // body: JSON.stringify(data),
+                    };
+                    fetch('https://127.0.0.1:7000/dropdatabase', options);
+                    console.log(options);
 
+          }
+
+          function dropRecord(data){
+          console.log('in the drop records function')
+          const recordToDelete = {data};
+          const options = {
+              method: 'POST',
+              options: false,
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(recordToDelete)
+          };
+          fetch('https://127.0.0.1:7000/droprecord', options);
+          console.log(options);
+
+}
+          function addTopic(){
+            let Eserial = document.getElementById('Eserial').value;
+              console.log('NEW TOPIC = '+JSON.stringify(Eserial) );
+              const data = ({Eserial});
+                    const options = {
+                        method: 'POST',
+                        options: false,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data),
+                    };
+                    fetch('https://127.0.0.1:7000/addtopic', options);
+                    console.log(options);
+
+          }
           
 
         </script>
