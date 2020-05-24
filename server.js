@@ -7,7 +7,7 @@ const app=express().use('*', cors());
 //var cors = require('cors');
 app.use(cors());
 var Datastore = require('nedb');
-app.listen(7000,"45.76.18.92", () =>console.log('listening at 7000'));
+app.listen(7000 , "dev.citynet.net"|"45.76.18.92", () =>console.log('listening at 7000'));
 app.use(express.static('public',cors()));
 app.use(express.static('public/data',cors()));
 app.use(express.static('http://127.0.0.1:7000/'+ '/public',cors()));
