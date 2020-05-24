@@ -53,6 +53,7 @@ getSubtitles({
   // database.insert({topic});
    console.log('in here');
 });
+response.json('finished grabbing timed text')
 })
 
 
@@ -76,6 +77,7 @@ app.post('/droprecord', (request1, response) => {
   console.log('DROPPED RECORD');
 })
 database.persistence.compactDatafile();
+response.json('dropped record');
   });
 
 app.post('/addtopic', (request1,response) =>{
