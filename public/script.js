@@ -4,7 +4,7 @@ var data = 'vIJdypOqlL4';
 function onYouTubeIframeAPIReady(data) {
     let dataInner = "";
     dataInner = data;
-    console.log('in here motherfucker');
+    console.log('I changed this Sunday May 24, 2020 ');
   //  console.log('dataInner = '+dataInner);
     player = new YT.Player('video-placeholder', {
         width: 600,
