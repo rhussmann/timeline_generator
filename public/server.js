@@ -1,22 +1,23 @@
-const  request  = require('request');
-const cheerio = require('cheerio');
-const express = require('express');
-var cors = require('cors');
+import request from 'request';
+import cheerio from 'cheerio';
+import express, { static, json } from 'express';
+import cors from 'cors';
 //let app = express();
-const app=express().use('*', cors());
+//const app=express().use('*', cors());
+const app=express().use('*', "45.76.18.92");
 //var cors = require('cors');
 app.use(cors());
-var Datastore = require('nedb');
+import Datastore from 'nedb';
 app.listen(7000,"45.76.18.92", () =>console.log('listening at 7000'));
-app.use(express.static('public',cors()));
+app.use(static('public',cors()));
 //app.use(express.static('public/data',cors()));
-app.use(express.static('http://127.0.0.1:7000/'+ '/public',cors()));
-app.use(express.json({limit: '1mb'}));
+app.use(static('http://127.0.0.1:7000/'+ '/public',cors()));
+app.use(json({limit: '1mb'}));
 const database = new Datastore('database.db');
 database.loadDatabase();
 
-var http = require('http');
-var fs = require('graceful-fs');
+import http from 'http';
+import fs from 'graceful-fs';
 
 app.get('/getsubtitles', cors(), (request,response) => {
     console.log('IN HERE!')
