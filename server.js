@@ -1,39 +1,30 @@
 const  request  = require('request');
 const cheerio = require('cheerio');
 const express = require('express');
-//var cors = require('cors');
+var cors = require('cors');
 //let app = express();
-const app=express();
+const app=express().use('*', cors());
 //var cors = require('cors');
-//app.use();
-//var Datastore = require('nedb');
-//const Datastore = require('nedb');
-const Datastore = require('nedb');
- path = require('path');
-//  db = new Datastore({ filename: path.join(require('nw.gui').App.dataPath, 'todo.db'), autoload: true });
+app.use(cors());
+var Datastore = require('nedb');
 app.listen(7000 , "dev.citynet.net"|"45.76.18.92", () =>console.log('listening at 7000'));
-app.use(express.static('public'));
-app.use(express.static('public/data'));
-app.use(express.static('http://127.0.0.1:7000/'+ '/public'));
+app.use(express.static('public',cors()));
+app.use(express.static('public/data',cors()));
+app.use(express.static('http://127.0.0.1:7000/'+ '/public',cors()));
 app.use(express.json({limit: '10mb'}));
-const database = new Datastore(filename : '../database.db');
-const topiclist = new Datastore(filename : '../topiclist.db');
+const database = new Datastore('database.db');
+const topiclist = new Datastore('topiclist.db');
 topiclist.loadDatabase();
 database.loadDatabase();
 var http = require('http');
 var fs = require('graceful-fs');
 
-//below is code to check to see whether the database is working 
-
-database.find({},(err,data)=>{
-  if (err){
-    //response.end();
-    console.log('Just threw an error');
-    return;
-  }
-  console.log('It worked');
-
-//Above is code to check to see whether the database is working 
+console.log('DROPPING DATABASE')
+  database.remove({ }, { multi: true }, function (err, numRemoved) {
+    database.loadDatabase(function (err) {
+      // done
+    });
+  });
 
 app.get('/getsubtitles', (request,response) => {
     database.find({},(err,data)=>{
