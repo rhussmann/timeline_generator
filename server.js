@@ -7,7 +7,10 @@ const app=express();
 //var cors = require('cors');
 //app.use();
 //var Datastore = require('nedb');
+//const Datastore = require('nedb');
 const Datastore = require('nedb');
+ path = require('path');
+//  db = new Datastore({ filename: path.join(require('nw.gui').App.dataPath, 'todo.db'), autoload: true });
 app.listen(7000 , "dev.citynet.net"|"45.76.18.92", () =>console.log('listening at 7000'));
 app.use(express.static('public'));
 app.use(express.static('public/data'));
@@ -19,6 +22,18 @@ topiclist.loadDatabase();
 database.loadDatabase();
 var http = require('http');
 var fs = require('graceful-fs');
+
+//below is code to check to see whether the database is working 
+
+database.find({},(err,data)=>{
+  if (err){
+    //response.end();
+    console.log('Just threw an error');
+    return;
+  }
+  console.log('It worked');
+
+//Above is code to check to see whether the database is working 
 
 app.get('/getsubtitles', (request,response) => {
     database.find({},(err,data)=>{
