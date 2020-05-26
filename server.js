@@ -20,9 +20,9 @@ var http = require('http');
 var fs = require('graceful-fs');
 
 console.log('DROPPING DATABASE')
-  database.remove({ }, { multi: true }, function (err, numRemoved) {
+database.remove({ }, { multi: true }, function (err, numRemoved) {
     database.loadDatabase(function (err) {
-      // done
+      done
     });
   });
 
