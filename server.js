@@ -12,19 +12,22 @@ app.use(express.static('public',cors()));
 app.use(express.static('public/data',cors()));
 app.use(express.static('http://127.0.0.1:7000/'+ '/public',cors()));
 app.use(express.json({limit: '10mb'}));
-const database = new Datastore('database.db');
-const topiclist = new Datastore('topiclist.db');
+const database = new Datastore({filename: __dirname +'database.db', autoload: true});
+//db = new DataStore({filename: __dirname + '/tempDB', autoload: true});
+const topiclist = new Datastore({filename: __dirname+'topiclist.db'});
 topiclist.loadDatabase();
 database.loadDatabase();
 var http = require('http');
 var fs = require('graceful-fs');
 
+/*
 console.log('DROPPING DATABASE')
 database.remove({ }, { multi: true }, function (err, numRemoved) {
     database.loadDatabase(function (err) {
       done
     });
   });
+*/
 
 app.get('/getsubtitles', (request,response) => {
     database.find({},(err,data)=>{
