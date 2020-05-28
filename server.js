@@ -17,8 +17,10 @@ const database = new Datastore({filename: __dirname +'database.db', autoload: tr
 const topiclist = new Datastore({filename: __dirname+'topiclist.db', autoload: true});
 //const database = new Datastore('database.db');
 //const topiclist = new Datastore('topiclist.db');
-topiclist.loadDatabase();
-database.loadDatabase();
+topiclist.loadDatabase(function (error) { if (error) { console.log('FATAL: local database could not be loaded. Caused by: ' + error); throw error; } console.log('INFO: local database loaded successfully.'); })
+database.loadDatabase(function (error) { if (error) { console.log('FATAL: local database could not be loaded. Caused by: ' + error); throw error; } console.log('INFO: local database loaded successfully.'); })
+//topiclist.loadDatabase(); 
+//database.loadDatabase();
 var http = require('http');
 var fs = require('graceful-fs');
 
