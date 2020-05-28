@@ -13,10 +13,10 @@ app.use(express.static('public',cors()));
 app.use(express.static('public/data',cors()));
 app.use(express.static('http://127.0.0.1:7000/'+ '/public',cors()));
 app.use(express.json({limit: '10mb'}));
-const database = new Datastore({filename: __dirname +'database.db', autoload: true});
-const topiclist = new Datastore({filename: __dirname+'topiclist.db', autoload: true});
-//const database = new Datastore('database.db');
-//const topiclist = new Datastore('topiclist.db');
+//const database = new Datastore({filename: __dirname +'database.db', autoload: true});
+//const topiclist = new Datastore({filename: __dirname+'topiclist.db', autoload: true});
+const database = new Datastore('database.db');
+const topiclist = new Datastore('topiclist.db');
 topiclist.loadDatabase(function (error) { if (error) { console.log('FATAL: local database could not be loaded. Caused by: ' + error); throw error; } console.log('INFO: local database loaded successfully.'); })
 database.loadDatabase(function (error) { if (error) { console.log('FATAL: local database could not be loaded. Caused by: ' + error); throw error; } console.log('INFO: local database loaded successfully.'); })
 //topiclist.loadDatabase(); 
