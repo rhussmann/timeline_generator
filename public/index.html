@@ -141,7 +141,9 @@ async function createTimeline(){
   let timeLineInfoSplit = timeLineInfo.split(":");
  
   console.log(timeLineInfoSplit.length+'*'+timeLineInfoSplit);
-  const response = await fetch('http://127.0.0.1:7000/getsubtitles');
+  //const response = await fetch('http://127.0.0.1:7000/getsubtitles');
+  const response = await fetch('http://localhost:7000/getsubtitles');
+  
   const data = await response.json();
   let startTime = [];
   youtubeIDArray = [];

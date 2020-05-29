@@ -3,6 +3,7 @@ const cheerio = require('cheerio');
 const express = require('express');
 var cors = require('cors');
 //let app = express();
+
 const app=express().use('*', cors());
 //var cors = require('cors');
 app.use(cors());
@@ -11,7 +12,8 @@ var Datastore = require('nedb');
 //app.listen(7000 , "dev.citynet.net", () =>console.log('listening at 7000'));
 app.use(express.static('public',cors()));
 app.use(express.static('public/data',cors()));
-app.use(express.static('http://127.0.0.1:7000/'+ '/public',cors()));
+//app.use(express.static('http://127.0.0.1:7000/'+ '/public',cors()));
+app.use(express.static('http://localhost:7000'+ '/public',cors()));
 app.use(express.json({limit: '10mb'}));
 app.listen(7000 , "dev.citynet.net"|"45.76.18.92", () =>console.log('listening at 7000'));
 //const database = new Datastore({filename: __dirname +'database.db', autoload: true});
