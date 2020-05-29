@@ -2,10 +2,7 @@ const  request  = require('request');
 const cheerio = require('cheerio');
 const express = require('express');
 var cors = require('cors');
-//let app = express();
-
 const app=express().use('*', cors());
-//var cors = require('cors');
 app.use(cors());
 var Datastore = require('nedb');
 //app.listen(7000 , "dev.citynet.net"|"45.76.18.92", () =>console.log('listening at 7000'));
@@ -27,16 +24,6 @@ database.loadDatabase(function (error) { if (error) { console.log('FATAL: local 
 //database.loadDatabase();
 var http = require('http');
 var fs = require('graceful-fs');
-
-/*
-console.log('DROPPING DATABASE')
-database.remove({ }, { multi: true }, function (err, numRemoved) {
-    database.loadDatabase(function (err) {
-      done
-    });
-  });
-*/
-
 app.get('/getsubtitles', (request,response) => {
     database.find({},(err,data)=>{
       if (err){
@@ -44,14 +31,11 @@ app.get('/getsubtitles', (request,response) => {
         return;
       }
       response.json(data);
-     //database.count({}, function (err, count) {
-      //response.end();
-      //console.log('Count = '+ database.count );})
     });
 });
 
 
-app.post ('/getsubtitles', (request1,response) =>  {
+app.post ('/getsubtitles', cors(), (request1,response) =>  {
 
 let Yserial = "";
 let topic = "";
@@ -76,7 +60,7 @@ response.json('finished grabbing timed text')
 
 
 //below is the function to remove the database totally.  
-app.post('/dropdatabase', (request1, response) => {
+app.post('/dropdatabase', cors(), (request1, response) => {
 console.log('DROPPING DATABASE')
   database.remove({ }, { multi: true }, function (err, numRemoved) {
     database.loadDatabase(function (err) {
@@ -85,7 +69,7 @@ console.log('DROPPING DATABASE')
   });
 })
 
-app.post('/droprecord', (request1, response) => {
+app.post('/droprecord',  cors(), (request1, response) => {
   
   let currentRecord = "";
   currentRecord = (request1.body.data);
@@ -98,7 +82,7 @@ database.persistence.compactDatafile();
 response.json('dropped record');
   });
 
-app.post('/addtopic', (request1,response) =>{
+app.post('/addtopic',  cors(), (request1,response) =>{
     let currentRecord = "";
     currentRecord = request1.body.Eserial;
     console.log('current Record = '+ currentRecord);
@@ -112,14 +96,10 @@ app.post('/addtopic', (request1,response) =>{
     
   })
 
-  app.get('/populatetopic', (request,response) => {
+  app.get('/populatetopic',  cors(), (request,response) => {
   console.log('inside the populate topic function in here to post the video');
     let currentRecord = "";
     currentRecord = request.body.data;
-  
-    //console.log('currentRecord ='+ currentRecord);
-   // database.remove({ _id: currentRecord }, {}, function (err, numRemoved){
-    //console.log('POPULATING THE TOPIC DROP DOWN');
     
       topiclist.find({},(err,data)=>{
         if (err){
