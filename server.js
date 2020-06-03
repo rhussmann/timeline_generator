@@ -2,8 +2,15 @@ const  request  = require('request');
 const cheerio = require('cheerio');
 const express = require('express');
 var cors = require('cors');
-const app=express().use('*', cors());
-app.use(cors());
+//const app=express().use('*', cors());
+//
+const app = express();
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+//
+//app.use(cors());
 var Datastore = require('nedb');
 //app.listen(7000 , "dev.citynet.net"|"45.76.18.92", () =>console.log('listening at 7000'));
 //app.listen(7000 , "dev.citynet.net", () =>console.log('listening at 7000'));
