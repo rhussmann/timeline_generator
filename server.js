@@ -4,20 +4,41 @@ const express = require('express');
 var cors = require('cors');
 //const app=express().use('*', cors());
 //
+//const bodyParser = require("body-parser");
+
 const app = express();
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  if (req.method === 'OPTIONS') {
+      res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+      return res.status(200).json({});
+  }
   next();
 });
 //
 //app.use(cors());
+
 var Datastore = require('nedb');
+//app.use("/getsubtitles");
+//app.use("dropdatabase");
+//app.use("/droprecord");
+//app.use("/addtopic");
+//app.use("/populatetopic");
+
 //app.listen(7000 , "dev.citynet.net"|"45.76.18.92", () =>console.log('listening at 7000'));
 //app.listen(7000 , "dev.citynet.net", () =>console.log('listening at 7000'));
-app.use(express.static('public',cors()));
-app.use(express.static('public/data',cors()));
+////app.use(express.static('public',cors()));
+////app.use(express.static('public/data',cors()));
 //app.use(express.static('http://127.0.0.1:7000/'+ '/public',cors()));
-app.use(express.static('http://localhost:7000'+ '/public',cors()));
+////app.use(express.static('http://localhost:7000'+ '/public',cors()));
 app.use(express.json({limit: '10mb'}));
 //app.listen(7000 , "dev.citynet.net"|"45.76.18.92", () =>console.log('listening at 7000'));
 app.listen(7000 , "dev.citynet.net"|"localhost", () =>console.log('listening at 7000'));
