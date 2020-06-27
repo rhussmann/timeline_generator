@@ -2,11 +2,13 @@ const  request  = require('request');
 const cheerio = require('cheerio');
 const express = require('express');
 var cors = require('cors');
+const Cors = require("cors");
 //const app=express().use('*', cors());
 //
 //const bodyParser = require("body-parser");
 
 const app = express();
+app.use(Cors());
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -31,7 +33,7 @@ var Datastore = require('nedb');
 //app.use("dropdatabase");
 //app.use("/droprecord");
 //app.use("/addtopic");
-//app.use("/populatetopic");
+// app.use("/populatetopic");
 
 //app.listen(7000 , "dev.citynet.net"|"45.76.18.92", () =>console.log('listening at 7000'));
 //app.listen(7000 , "dev.citynet.net", () =>console.log('listening at 7000'));
